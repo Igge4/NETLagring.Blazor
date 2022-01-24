@@ -1,0 +1,97 @@
+﻿@page "/customer"
+@using NETLagring.Blazor.Model
+@inject Service Service
+
+
+<div class="container">
+
+    <EditForm Model="@customer" OnValidSubmit="@AddCustomer">
+        <h5 class="mb-3">Create A Customer</h5>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Name..." @bind="customer.Name" />
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Mail..." @bind="customer.Mail" />
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Phone number..." @bind="customer.PhoneNumber" />
+                </div>     
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="City..." @bind="customer.City" />
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Country..." @bind="customer.Country" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Add Customer</button>
+    </EditForm>
+</div>
+
+
+    <div class="container-fluid" style="margin-top: 4rem;">
+         <div class="row">
+       
+             @if(getListOfCustomer != null)
+        {
+              @foreach(var cus in getListOfCustomer)       
+             {  
+                 <div class="col-4">Customer's id</div> 
+                 <div class="col-8">@cus.Id</div>   
+
+                 <div class="col-4">Customer's name</div> 
+                 <div class="col-8">@cus.Name</div>      
+             
+             
+                 <div class="col-4">Customer's mail</div> 
+                 <div class="col-8">@cus.Mail</div>       
+             
+            
+                 <div class="col-4">Customer's Phonenumber</div> 
+                 <div class="col-8">@cus.PhoneNumber</div>   
+             
+            
+                 <div class="col-4">Customer's city</div>   
+                 <div class="col-8">@cus.City</div>     
+             
+            
+                 <div class="col-4">Customer's country</div>   
+                 <div class="col-8" style="margin-bottom: 3rem;">@cus.Country</div>
+             }
+        }
+      
+        </div>
+    </div>
+
+
+
+
+@code {
+
+    private Customer customer { get; set; } = new Customer();
+    private List<Customer> getListOfCustomer;
+
+
+    public void AddCustomer()
+    {
+        var test = Service.AddCustomer(customer);
+
+        if(test == null)
+        {
+            Console.WriteLine(test);
+        }
+    }
+
+    public void GetListOfCustomers()
+    {
+        getListOfCustomer = Service.GetListOfCustomer();
+    }
+
+    protected override void OnInitialized()
+    {
+        GetListOfCustomers();
+    }
+}

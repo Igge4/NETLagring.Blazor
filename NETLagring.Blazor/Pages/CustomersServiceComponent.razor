@@ -1,0 +1,120 @@
+﻿@page "/customerservice"
+@inject Service Service
+@using NETLagring.Blazor.Model
+<div class="container">
+
+    <EditForm Model="@customersService" OnValidSubmit="@AddCustomerService">
+        <h5 class="mb-3">Add A Customer Service</h5>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-12">
+                    <input type="text" class="form-control" placeholder="Rubric..." @bind="customersService.Rubric" />
+                </div>
+                <div class="col-12">
+              
+                    <InputSelect class="form-control" @bind-Value="customersService.Status">                   
+                        @foreach(var status in Enum.GetValues(typeof(Status)))                  
+                        {                  
+                            <option>@status</option>
+                        }             
+                    </InputSelect> 
+                </div>
+                <div class="col-12">
+                 <InputSelect class="form-control" @bind-Value="customersService.CustomerId">
+                    @if(getCustomers != null)
+                    {
+                        @foreach(var cus in getCustomers)
+                        {
+                            <option value=@cus.Id>@cus.Name</option>
+                        }
+                    }
+                </InputSelect>
+
+                <InputTextArea class="form-control" @bind-Value="customersService.Description" placeholder="Description"> </InputTextArea>
+                </div>          
+                
+            </div>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Add Customer Service</button>
+    </EditForm>
+</div>
+
+
+ <div class="container-fluid" style="margin-top: 4rem;">
+         <div class="row">
+       
+             
+             @if(getListOfServices != null)      
+             {
+           
+                 @foreach(var srv in getListOfServices)                
+                 {  
+                 <div class="col-4">Service's id</div> 
+                 <div class="col-8">@srv.Id</div>   
+
+                 <div class="col-4">Created</div> 
+                 <div class="col-8">@srv.Created</div>   
+
+                 <div class="col-4">Last edited</div> 
+                 <div class="col-8">@srv.LastEdited</div>     
+                 
+                 <div class="col-4">Customer</div>                               
+                 <div class="col-8">@srv.CustomerId</div> 
+                                  
+                 <div class="col-4">Rubric</div> 
+                 <div class="col-6">@srv.Rubric</div>  
+                
+                 <div class="col-4">Description</div> 
+                 <div class="col-6">@srv.Description</div>  
+
+                 <div class="col-4">Status</div>   
+                 <div class="col-8" style="margin-bottom: 3rem;">@srv.Status</div>
+
+                 
+                  <div class="col-12" style="margin-bottom: 3rem;">  
+                      <a class="btn btn-sm btn-danger" href="/EditCustomerService/@srv.Id">Change status of this service</a>    
+                 </div>
+    
+                }
+        }
+      
+     </div>
+ </div>
+
+
+@code {
+    private CustomersService customersService { get; set; } = new CustomersService();
+    private List<CustomersService> getListOfServices;
+    private List<Customer> getCustomers;
+
+    public void AddCustomerService()
+    {
+        var test = Service.AddCustomerService(customersService);
+
+        if(test == null)
+        {
+            Console.WriteLine(test);
+        }
+    }
+    public void EditCustomerService()
+    {
+        
+    }
+    public void GetListOfServices()
+    {
+        getListOfServices = Service.GetListOfService();
+    }
+
+    public void GetListOfCustomers()
+    {
+        getCustomers = Service.GetListOfCustomer();
+    }
+
+    protected override void OnInitialized()
+    {
+        GetListOfCustomers();
+        GetListOfServices();
+    }
+
+}

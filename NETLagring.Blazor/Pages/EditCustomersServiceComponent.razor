@@ -1,0 +1,35 @@
+﻿@page "/EditCustomerService/{CustomerServiceId:int}"
+@using Blazor.Model
+@inject Service Service
+@inject NavigationManager nav
+
+
+ <EditForm Model="@customersService" OnValidSubmit="@EditCustomerService">
+        <h5 class="mb-3">Update Status</h5>
+        <div class="form-group">
+            <div class="row">           
+                <InputSelect class="form-control" @bind-Value="customersService.Status">  
+                    @foreach(var status in Enum.GetValues(typeof(Status)))
+                    {
+                        <option>@status</option>
+                    }
+                </InputSelect> 
+                
+            </div>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Update</button>
+    </EditForm>
+@code {
+
+    [Parameter] 
+    public int CustomerServiceId { get; set; }
+    private CustomersService customersService { get; set; } = new CustomersService();
+
+    public void EditCustomerService()
+    {
+        Service.EditStatus(CustomerServiceId, customersService);
+
+         nav.NavigateTo("/customerservice");
+    }
+}
